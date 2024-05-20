@@ -51,6 +51,22 @@ namespace ProNatur_Biomarkt_GmbH
 
         private void btnProductEdit_Click(object sender, EventArgs e)
         {
+            if (lastSelectedProductKey == 0)
+            {
+                MessageBox.Show("Bitte wähle zuerst ein Produkt aus.");
+                return;
+            }
+
+            string productName = textBoxProductName.Text;
+            string productBrand = textBoxProductBrand.Text;
+            string productCategory = comboBoxProductCategory.Text;
+            string productPrice = textBoxProductPrice.Text;
+
+            string query = string.Format("update Products set Name='{0}', Brand = '{1}', Category='{2}', Price='{3}' where Id={4} "
+                , productName, productBrand, productCategory, productPrice, lastSelectedProductKey);
+
+            ExecuteQuery(query);
+
             ShowProdutcs();
         }
 
@@ -69,6 +85,7 @@ namespace ProNatur_Biomarkt_GmbH
             string query = string.Format("delete from Products where Id={0};", lastSelectedProductKey);
             ExecuteQuery(query);
 
+            ClearAllFields();
             ShowProdutcs();
         }
 
@@ -106,7 +123,7 @@ namespace ProNatur_Biomarkt_GmbH
             comboBoxProductCategory.SelectedItem = null;
         }
 
-        private void productsDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void productsDGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             textBoxProductName.Text = productsDGV.SelectedRows[0].Cells[1].Value.ToString();
             textBoxProductBrand.Text = productsDGV.SelectedRows[0].Cells[2].Value.ToString();
